@@ -1,18 +1,15 @@
 package tetris;
 
-import blocks.LBlock;
+import blocks.BlockList;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 
 public class GameArea extends javax.swing.JPanel {
     private int rows, columns, cellSize;
-    private LBlock block;
+    private BlockList blockList;
+    private TetrisBlock block;
+    private Color[][] background;
 
     public GameArea(JPanel placeholder) {
         this(placeholder, 20);
@@ -29,42 +26,98 @@ public class GameArea extends javax.swing.JPanel {
         this.cellSize = cellSize;
         this.rows = this.getHeight() / cellSize;
         this.columns = this.getWidth() / cellSize;
-        this.block = new LBlock(this.columns);
+        this.blockList = new BlockList(this.columns, this.cellSize);
+        
+        this.background = new Color[this.rows][this.columns];
     }
     
     // controls
-    public void moveBlockDown() {
-        if (!this.isCollidingBottomEdge()) {
-            this.block.moveBlockDown();
-            repaint();        
-        }
+    public boolean moveBlockDown() {
+           if (!this.isCollidingBottomEdge()) {
+               this.block.moveBlockDown();
+               repaint();       
+               return true;
+           }
+           
+           this.moveToBackground();
+           return false;
     }
     
-    public void moveBlockLeft() {
-        if (!this.isCollidingLeftEdge()) {
+    public boolean moveBlockLeft() {
+        if (!this.isCollidingLeftEdge() && !this.isCollidingBottomEdge()) {
             this.block.moveBlockLeft();
             repaint();
+            return true;
         }
+        
+        return false;
     }
     
-    public void moveBlockRight() {
-        if (!this.isCollidingRightEdge()) {
+    public boolean moveBlockRight() {
+        if (!this.isCollidingRightEdge() && !this.isCollidingBottomEdge()) {
             this.block.moveBlockRight();
-            repaint();        
+            repaint();
+            return true;
         }
+        
+        return  false;
+    }
+    
+    public void dropBlock() {
+        while (!this.isCollidingBottomEdge()) {
+            this.moveBlockDown();
+        }
+        
+        repaint();
+    }
+    
+    public void rotateBlock() {
+        this.block.rotate();
+        repaint();
     }
     
     // collision detection
-    public boolean isCollidingRightEdge() {
+    private boolean isCollidingRightEdge() {
         return ((this.block.getShapeColumnLength() + this.block.getOffsetX()) * cellSize) >= this.getWidth();
     }
     
-    public boolean isCollidingLeftEdge() {
+    private boolean isCollidingLeftEdge() {
         return (this.block.getOffsetX() * cellSize) <= 0;
     }
     
-    public boolean isCollidingBottomEdge() {
+    private boolean isCollidingBottomEdge() {
         return ((this.block.getShapeRowLength() + this.block.getOffsetY()) * cellSize) >= this.getHeight();
+    }
+    
+    public void setRandBlock() {
+        this.block = this.blockList.getRandBlock();
+        this.block.setOffsetX((int) (Math.random() * columns));
+        this.block.setOffsetY(-this.block.getShapeRowLength());
+    }
+    
+    private void drawBackground(Graphics g) {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                Color color = background[i][j];
+                
+                if (color != null) {
+                    drawGridSquare(g, j, i, color);
+                }
+            }
+        }
+    }
+    
+    private void moveToBackground() {
+        int rows = this.block.getShapeRowLength();
+        int columns = this.block.getShapeColumnLength();
+    
+        for (int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                if (this.block.getShape()[i][j]) {
+                    background[i + this.block.getOffsetY()][j + this.block.getOffsetX()] = this.block.getColor();
+                }
+            }
+        }
     }
     
     private void drawBlock(Graphics g) {
@@ -74,13 +127,18 @@ public class GameArea extends javax.swing.JPanel {
         for (int i = 0; i < block.getShapeRowLength(); i++) {
             for (int j = 0; j < block.getShapeColumnLength(); j++) {
                 if (block.getShape()[i][j]) {
-                    g.setColor(Color.GREEN);
-                    g.fillRoundRect((x + j) * cellSize, (y + i) * cellSize, cellSize, cellSize, 5, 5);
-                    g.setColor(Color.BLACK);
-                    g.drawRoundRect((x + j) * cellSize, (y + i) * cellSize, cellSize, cellSize, 5, 5);
+                    drawGridSquare(g, x + j, y + i, this.block.getColor());
                 }
             }
         }
+    }
+    
+    private void drawGridSquare(Graphics g, int x, int y, Color color) {
+        
+        g.setColor(color);
+        g.fillRoundRect(x * cellSize, y * cellSize, cellSize, cellSize, 5, 5);
+        g.setColor(Color.BLACK);
+        g.drawRoundRect(x * cellSize, y * cellSize, cellSize, cellSize, 5, 5);
     }
 
     @Override
@@ -92,6 +150,8 @@ public class GameArea extends javax.swing.JPanel {
                 g.drawRect(j * cellSize, i * cellSize, cellSize, cellSize);
             }
         }
+        
+        drawBackground(g);
         drawBlock(g);
     }
     

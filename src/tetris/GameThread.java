@@ -13,13 +13,14 @@ public class GameThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            try {
-                if (!ga.isCollidingBottomEdge()) {
-                    ga.moveBlockDown();
+            ga.setRandBlock();
+            
+            while (ga.moveBlockDown()) {
+                try {
                     Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

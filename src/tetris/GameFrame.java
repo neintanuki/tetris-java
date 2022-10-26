@@ -32,6 +32,7 @@ public class GameFrame extends javax.swing.JFrame {
         im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
         im.put(KeyStroke.getKeyStroke("LEFT"), "left");
         im.put(KeyStroke.getKeyStroke("DOWN"), "down");
+        im.put(KeyStroke.getKeyStroke("UP"), "up");
         
         // actions
         am.put("right", new AbstractAction() {
@@ -52,7 +53,14 @@ public class GameFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("down");
-                ga.moveBlockDown();
+                ga.dropBlock();
+            }
+        });
+        am.put("up", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("up");
+                ga.rotateBlock();
             }
         });
     }
