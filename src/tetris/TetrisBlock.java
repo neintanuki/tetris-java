@@ -2,6 +2,7 @@ package tetris;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TetrisBlock {
     protected int offsetX, offsetY;
@@ -26,7 +27,7 @@ public class TetrisBlock {
             
             this.shape = this.shapes[i];
         }
-        
+
         this.shape = this.shapes[currentRotation];
     }
     

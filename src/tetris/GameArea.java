@@ -35,11 +35,12 @@ public class GameArea extends javax.swing.JPanel {
     public boolean moveBlockDown() {
            if (!this.isCollidingBottomEdge()) {
                this.block.moveBlockDown();
-               repaint();       
+               repaint();
                return true;
            }
            
            this.moveToBackground();
+           repaint();
            return false;
     }
     
@@ -78,20 +79,72 @@ public class GameArea extends javax.swing.JPanel {
     
     // collision detection
     private boolean isCollidingRightEdge() {
-        return ((this.block.getShapeColumnLength() + this.block.getOffsetX()) * cellSize) >= this.getWidth();
+        if ((this.block.getOffsetX() + this.block.getShapeColumnLength()) == this.columns) return  true;
+ 
+        boolean[][] shape = this.block.getShape();
+        for (int i = 0; i < this.block.getShapeRowLength(); i++) {
+            for (int j = this.block.getShapeColumnLength() - 1; j >= 0; j--) {
+                if (!shape[i][j]) {
+                    int x = j + this.block.getOffsetX() + 1;
+                    int y = i + this.block.getOffsetY();
+                    if (y < 0) break;
+                    if (background[y][x] != null) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        return false;
     }
     
     private boolean isCollidingLeftEdge() {
-        return (this.block.getOffsetX() * cellSize) <= 0;
+        if (this.block.getOffsetX() == 0) return true;
+        
+        boolean[][] shape = this.block.getShape();
+        for (int i = 0; i < this.block.getShapeRowLength(); i++) {
+            for (int j = 0; j < this.block.getShapeColumnLength(); j++) {
+                if (!shape[i][j]) {
+                    int x = j + this.block.getOffsetX() - 1;
+                    int y = i + this.block.getOffsetY();
+                    if (y < 0) break;
+                    if (background[y][x] != null) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        return false;
     }
     
     private boolean isCollidingBottomEdge() {
-        return ((this.block.getShapeRowLength() + this.block.getOffsetY()) * cellSize) >= this.getHeight();
+        if (this.block.getOffsetY() + this.block.getShapeRowLength() == this.rows) return true;
+        
+        boolean[][] shape = this.block.getShape();
+        for (int i = 0; i < this.block.getShapeColumnLength(); i++) {
+            for (int j = this.block.getShapeRowLength() - 1; j >= 0; j--) {
+                if (!shape[j][i]) {
+                    int x = i + this.block.getOffsetX();
+                    int y = (j + this.block.getOffsetY()) + 1;
+                    if (y < 0) break;
+                    if (background[y][x] != null) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        return false;
     }
     
     public void setRandBlock() {
         this.block = this.blockList.getRandBlock();
-        this.block.setOffsetX((int) (Math.random() * columns));
+//        this.block.setOffsetX((int) (Math.random() * columns));
+        this.block.setOffsetX(5);
         this.block.setOffsetY(-this.block.getShapeRowLength());
     }
     
