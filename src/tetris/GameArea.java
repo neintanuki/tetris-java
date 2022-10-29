@@ -10,12 +10,13 @@ public class GameArea extends javax.swing.JPanel {
     private BlockList blockList;
     private TetrisBlock block;
     private Color[][] background;
+    private GameFrame gf;
 
-    public GameArea(JPanel placeholder) {
-        this(placeholder, 20);
+    public GameArea(JPanel placeholder, GameFrame gf) {
+        this(placeholder, 20, gf);
     }
     
-    public GameArea(JPanel placeholder, int cellSize) {
+    public GameArea(JPanel placeholder, int cellSize, GameFrame gf) {
         // initialize properties
         placeholder.setVisible(false);
         
@@ -23,6 +24,7 @@ public class GameArea extends javax.swing.JPanel {
         this.setBorder(placeholder.getBorder());
         this.setBounds(placeholder.getBounds());
         
+        this.gf = gf;
         this.cellSize = cellSize;
         this.rows = this.getHeight() / cellSize;
         this.columns = this.getWidth() / cellSize;
@@ -38,13 +40,12 @@ public class GameArea extends javax.swing.JPanel {
                repaint();
                return true;
            }
-           
-           this.moveToBackground();
-           repaint();
+
            return false;
     }
     
     public boolean moveBlockLeft() {
+        if (this.block == null) return false;
         if (!this.isCollidingLeftEdge() && !this.isCollidingBottomEdge()) {
             this.block.moveBlockLeft();
             repaint();
@@ -55,16 +56,18 @@ public class GameArea extends javax.swing.JPanel {
     }
     
     public boolean moveBlockRight() {
+        if (this.block == null) return false;
         if (!this.isCollidingRightEdge() && !this.isCollidingBottomEdge()) {
             this.block.moveBlockRight();
             repaint();
             return true;
         }
         
-        return  false;
+        return false;
     }
     
     public void dropBlock() {
+        if (this.block == null) return;
         while (!this.isCollidingBottomEdge()) {
             this.moveBlockDown();
         }
@@ -73,19 +76,25 @@ public class GameArea extends javax.swing.JPanel {
     }
     
     public void rotateBlock() {
+        if (this.block == null) return;
+
         this.block.rotate();
+        if (this.block.getOffsetX() < 0) block.setOffsetX(0);
+        if (this.block.getOffsetX() + block.getShapeColumnLength() >= this.columns) block.setOffsetX(this.columns - block.getShapeColumnLength());
+        if (this.block.getOffsetY() + block.getShapeRowLength() >= this.rows) block.setOffsetY(this.rows - block.getShapeRowLength());
+
         repaint();
     }
     
     // collision detection
     private boolean isCollidingRightEdge() {
         if ((this.block.getOffsetX() + this.block.getShapeColumnLength()) == this.columns) return  true;
- 
+        
         boolean[][] shape = this.block.getShape();
         for (int i = 0; i < this.block.getShapeRowLength(); i++) {
             for (int j = this.block.getShapeColumnLength() - 1; j >= 0; j--) {
-                if (!shape[i][j]) {
-                    int x = j + this.block.getOffsetX() + 1;
+                if (shape[i][j]) {
+                    int x = (j + this.block.getOffsetX()) + 1;
                     int y = i + this.block.getOffsetY();
                     if (y < 0) break;
                     if (background[y][x] != null) {
@@ -105,8 +114,8 @@ public class GameArea extends javax.swing.JPanel {
         boolean[][] shape = this.block.getShape();
         for (int i = 0; i < this.block.getShapeRowLength(); i++) {
             for (int j = 0; j < this.block.getShapeColumnLength(); j++) {
-                if (!shape[i][j]) {
-                    int x = j + this.block.getOffsetX() - 1;
+                if (shape[i][j]) {
+                    int x = (j + this.block.getOffsetX()) - 1;
                     int y = i + this.block.getOffsetY();
                     if (y < 0) break;
                     if (background[y][x] != null) {
@@ -126,7 +135,7 @@ public class GameArea extends javax.swing.JPanel {
         boolean[][] shape = this.block.getShape();
         for (int i = 0; i < this.block.getShapeColumnLength(); i++) {
             for (int j = this.block.getShapeRowLength() - 1; j >= 0; j--) {
-                if (!shape[j][i]) {
+                if (shape[j][i]) {
                     int x = i + this.block.getOffsetX();
                     int y = (j + this.block.getOffsetY()) + 1;
                     if (y < 0) break;
@@ -141,10 +150,57 @@ public class GameArea extends javax.swing.JPanel {
         return false;
     }
     
+    public boolean isOutOfBounds() {
+        if (this.block.getOffsetY() < 0) {
+            this.block = null;
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public void clearLines() {
+        boolean isLineFilled;
+        
+        for (int i = this.rows - 1; i >= 0; i--) {
+            isLineFilled = true;
+            for (int j = 0; j < this.columns; j++) {
+                if (background[i][j] == null) {
+                    isLineFilled = false;
+                    break;
+                }
+            }
+
+            if (isLineFilled) {
+                this.clearLine(i);
+                this.shiftDown(i);
+                this.clearLine(0);
+                i++;
+                gf.incLines();
+                gf.incScore();
+                gf.setLevel(gf.getLines() / 10);
+                repaint();
+            }
+        }
+    }
+    
+    private void clearLine(int row) {
+        for (int i = 0; i < this.columns; i++) {
+            background[row][i] = null;
+        }
+    }
+    
+    private void shiftDown(int row) {
+        for (int i = row; i > 0; i--) {
+            for (int j = 0; j < this.columns; j++) {
+                background[i][j] = background[i - 1][j];
+            }
+        }
+    }
+    
     public void setRandBlock() {
         this.block = this.blockList.getRandBlock();
-//        this.block.setOffsetX((int) (Math.random() * columns));
-        this.block.setOffsetX(5);
+        this.block.setOffsetX((int) (columns / 2));
         this.block.setOffsetY(-this.block.getShapeRowLength());
     }
     
@@ -160,7 +216,7 @@ public class GameArea extends javax.swing.JPanel {
         }
     }
     
-    private void moveToBackground() {
+    public void moveToBackground() {
         int rows = this.block.getShapeRowLength();
         int columns = this.block.getShapeColumnLength();
     
@@ -171,9 +227,12 @@ public class GameArea extends javax.swing.JPanel {
                 }
             }
         }
+        
+        repaint();
     }
     
     private void drawBlock(Graphics g) {
+        if (this.block == null) return;
         int x = block.getOffsetX();
         int y = block.getOffsetY();
         

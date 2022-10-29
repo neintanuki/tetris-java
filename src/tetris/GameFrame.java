@@ -8,11 +8,18 @@ import javax.swing.KeyStroke;
 
 public class GameFrame extends javax.swing.JFrame {
     private GameArea ga;
+    private int speed, score, lines, level;
     
     public GameFrame() {
+        // default values
+        this.speed = 1000;
+        this.score = 0;
+        this.lines = 0;
+        this.level = 1;
+        
         initComponents();
         
-        this.ga = new GameArea(gameAreaPlaceholder);
+        this.ga = new GameArea(gameAreaPlaceholder, this);
         initControls();
         
         this.add(this.ga);
@@ -20,7 +27,42 @@ public class GameFrame extends javax.swing.JFrame {
     }
     
     private void startGame() {
-        new GameThread(ga).start();
+        new GameThread(ga, this).start();
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void incScore() {
+        this.score += 5;
+        this.scoreLabel.setText("Score: " + Integer.toString(this.score));
+    }
+
+    public int getLines() {
+        return lines;
+    }
+
+    public void incLines() {
+        this.lines++;
+        this.linesLabel.setText("Lines: " + Integer.toString(this.lines));
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+        this.levelLabel.setText("Level: " + Integer.toString(this.level));
     }
     
     // keyboard controls
@@ -75,39 +117,65 @@ public class GameFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         gameAreaPlaceholder = new javax.swing.JPanel();
+        scoreLabel = new javax.swing.JLabel();
+        levelLabel = new javax.swing.JLabel();
+        linesLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        gameAreaPlaceholder.setBackground(new java.awt.Color(0, 204, 204));
-        gameAreaPlaceholder.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        gameAreaPlaceholder.setBackground(new java.awt.Color(153, 153, 255));
+        gameAreaPlaceholder.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         gameAreaPlaceholder.setPreferredSize(new java.awt.Dimension(300, 400));
 
         javax.swing.GroupLayout gameAreaPlaceholderLayout = new javax.swing.GroupLayout(gameAreaPlaceholder);
         gameAreaPlaceholder.setLayout(gameAreaPlaceholderLayout);
         gameAreaPlaceholderLayout.setHorizontalGroup(
             gameAreaPlaceholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
+            .addGap(0, 198, Short.MAX_VALUE)
         );
         gameAreaPlaceholderLayout.setVerticalGroup(
             gameAreaPlaceholderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 398, Short.MAX_VALUE)
         );
 
+        scoreLabel.setFont(new java.awt.Font("Manjari", 1, 18)); // NOI18N
+        scoreLabel.setText("Score: 0");
+
+        levelLabel.setFont(new java.awt.Font("Manjari", 1, 18)); // NOI18N
+        levelLabel.setText("Level: 1");
+
+        linesLabel.setFont(new java.awt.Font("Manjari", 1, 18)); // NOI18N
+        linesLabel.setText("Lines: 0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(147, 147, 147)
-                .addComponent(gameAreaPlaceholder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(149, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(gameAreaPlaceholder, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(levelLabel)
+                    .addComponent(linesLabel)
+                    .addComponent(scoreLabel))
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(gameAreaPlaceholder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(gameAreaPlaceholder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(328, 328, 328)
+                        .addComponent(linesLabel)
+                        .addGap(6, 6, 6)
+                        .addComponent(levelLabel)
+                        .addGap(6, 6, 6)
+                        .addComponent(scoreLabel)))
+                .addGap(6, 6, 6))
         );
 
         pack();
@@ -116,5 +184,8 @@ public class GameFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel gameAreaPlaceholder;
+    private javax.swing.JLabel levelLabel;
+    private javax.swing.JLabel linesLabel;
+    private javax.swing.JLabel scoreLabel;
     // End of variables declaration//GEN-END:variables
 }

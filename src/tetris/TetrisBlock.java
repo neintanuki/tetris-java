@@ -83,8 +83,10 @@ public class TetrisBlock {
         this.offsetX--;
     }
     
-     public void moveBlockRight() {
+    public void moveBlockRight() {
         this.offsetX++;
     }
+     
+    
 
 }

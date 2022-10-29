@@ -23,8 +23,7 @@ public class BlockList {
     
     public TetrisBlock getRandBlock() {
         System.out.println((int) (Math.random() * blocks.size()));
-//        return blocks.get((int) (Math.random() * blocks.size()));
-        return blocks.get(0);
+        return blocks.get((int) (Math.random() * blocks.size()));
     }
     
 }
