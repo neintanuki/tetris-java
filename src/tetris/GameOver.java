@@ -2,11 +2,13 @@ package tetris;
 
 public class GameOver extends javax.swing.JFrame {
     
+    // static declaration
     private static int levelReached, finalScore, linesCompleted;
     
     public GameOver() {
         initComponents();
         
+        // this keyword
         this.setScore();
         this.setLevel();
         this.setLines();
@@ -16,6 +18,7 @@ public class GameOver extends javax.swing.JFrame {
         this.setScore(0);
     };
     
+    // method overloading
     public static void setScore(int score) {
         finalScore = score;
         ScoreLabel.setText("Final Score: " + finalScore);
@@ -25,6 +28,7 @@ public class GameOver extends javax.swing.JFrame {
         this.setLevel(1);
     };
     
+    // method overloading
     public static void setLevel(int level) {
         levelReached = level;
         levelLabel.setText("Level Reached: " + levelReached);
@@ -34,6 +38,7 @@ public class GameOver extends javax.swing.JFrame {
         this.setLines(0);
     };
     
+    // method overloading
     public static void setLines(int lines) {
         linesCompleted = lines;
         linesLabel.setText("Lines Completed: " + linesCompleted);
