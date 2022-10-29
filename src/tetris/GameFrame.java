@@ -11,6 +11,7 @@ public class GameFrame extends javax.swing.JFrame {
     private int speed, score, lines, level;
     
     public GameFrame() {
+        // this keyword
         // default values
         this.speed = 1000;
         this.score = 0;
@@ -30,36 +31,44 @@ public class GameFrame extends javax.swing.JFrame {
         new GameThread(ga, this).start();
     }
 
+    // accessor
     public int getSpeed() {
         return speed;
     }
 
+    // mutator
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
+    // accessor
     public int getScore() {
         return score;
     }
 
+    // mutator
     public void incScore() {
         this.score += 5;
         this.scoreLabel.setText("Score: " + Integer.toString(this.score));
     }
 
+    // accessor
     public int getLines() {
         return lines;
     }
 
+    // mutator
     public void incLines() {
         this.lines++;
         this.linesLabel.setText("Lines: " + Integer.toString(this.lines));
     }
 
+    // accessor
     public int getLevel() {
         return level;
     }
 
+    // mutator
     public void setLevel(int level) {
         this.level = level;
         this.levelLabel.setText("Level: " + Integer.toString(this.level));
@@ -80,28 +89,24 @@ public class GameFrame extends javax.swing.JFrame {
         am.put("right", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("right");
                 ga.moveBlockRight();
             }
         });
         am.put("left", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("left");
                 ga.moveBlockLeft();
             }
         });
         am.put("down", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("down");
                 ga.dropBlock();
             }
         });
         am.put("up", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("up");
                 ga.rotateBlock();
             }
         });

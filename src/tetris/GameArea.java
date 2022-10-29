@@ -13,13 +13,16 @@ public class GameArea extends javax.swing.JPanel {
     private GameFrame gf;
 
     public GameArea(JPanel placeholder, GameFrame gf) {
+        // constructor chaining
         this(placeholder, 20, gf);
     }
     
+    // constructor overloading
     public GameArea(JPanel placeholder, int cellSize, GameFrame gf) {
         // initialize properties
         placeholder.setVisible(false);
         
+        // this keyword
         this.setBackground(placeholder.getBackground());
         this.setBorder(placeholder.getBorder());
         this.setBounds(placeholder.getBounds());
@@ -198,6 +201,7 @@ public class GameArea extends javax.swing.JPanel {
         }
     }
     
+    // setter
     public void setRandBlock() {
         this.block = this.blockList.getRandBlock();
         this.block.setOffsetX((int) (columns / 2));

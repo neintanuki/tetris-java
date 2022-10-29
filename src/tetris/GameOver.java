@@ -1,22 +1,43 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package tetris;
 
-/**
- *
- * @author neint
- */
 public class GameOver extends javax.swing.JFrame {
-
-    /**
-     * Creates new form GameOver
-     */
+    
+    private static int levelReached, finalScore, linesCompleted;
+    
     public GameOver() {
         initComponents();
+        
+        this.setScore();
+        this.setLevel();
+        this.setLines();
     }
 
+    public void setScore() {
+        this.setScore(0);
+    };
+    
+    public static void setScore(int score) {
+        finalScore = score;
+        ScoreLabel.setText("Final Score: " + finalScore);
+    };
+    
+    public void setLevel() {
+        this.setLevel(1);
+    };
+    
+    public static void setLevel(int level) {
+        levelReached = level;
+        levelLabel.setText("Level Reached: " + levelReached);
+    };
+
+    public void setLines() {
+        this.setLines(0);
+    };
+    
+    public static void setLines(int lines) {
+        linesCompleted = lines;
+        linesLabel.setText("Lines Completed: " + linesCompleted);
+    };
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,6 +50,10 @@ public class GameOver extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        levelLabel = new javax.swing.JLabel();
+        linesLabel = new javax.swing.JLabel();
+        ScoreLabel = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Game Over");
@@ -56,6 +81,25 @@ public class GameOver extends javax.swing.JFrame {
             }
         });
 
+        levelLabel.setFont(new java.awt.Font("Manjari", 1, 14)); // NOI18N
+        levelLabel.setText("Level Reached: ");
+
+        linesLabel.setFont(new java.awt.Font("Manjari", 1, 14)); // NOI18N
+        linesLabel.setText("Lines Completed: ");
+
+        ScoreLabel.setFont(new java.awt.Font("Manjari", 1, 14)); // NOI18N
+        ScoreLabel.setText("Final Score: ");
+
+        jButton2.setBackground(new java.awt.Color(255, 255, 0));
+        jButton2.setFont(new java.awt.Font("Manjari", 1, 18)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 51, 51));
+        jButton2.setText("QUIT GAME");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -63,11 +107,18 @@ public class GameOver extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jLabel1))
+                        .addGap(117, 117, 117)
+                        .addComponent(jButton1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(118, 118, 118)
-                        .addComponent(jButton1)))
+                        .addGap(135, 135, 135)
+                        .addComponent(jButton2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(linesLabel)
+                            .addComponent(levelLabel)
+                            .addComponent(ScoreLabel)
+                            .addComponent(jLabel1))))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -75,9 +126,17 @@ public class GameOver extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(levelLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(linesLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ScoreLabel)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
+                .addGap(19, 19, 19))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -88,7 +147,9 @@ public class GameOver extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -100,10 +161,19 @@ public class GameOver extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private static javax.swing.JLabel ScoreLabel;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private static javax.swing.JLabel levelLabel;
+    private static javax.swing.JLabel linesLabel;
     // End of variables declaration//GEN-END:variables
 }

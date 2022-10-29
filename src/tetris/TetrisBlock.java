@@ -39,38 +39,47 @@ public class TetrisBlock {
         this.shape = this.shapes[currentRotation];
     }
 
+    // accessor
     public Color getColor() {
         return color;
     }
 
+    // mutator
     public void setColor(Color color) {
         this.color = color;
     }
 
+    // accessor
     public int getOffsetX() {
         return offsetX;
     }
 
+    // mutator
     public void setOffsetX(int offsetX) {
         this.offsetX = offsetX;
     }
 
+    // accessor
     public int getOffsetY() {
         return offsetY;
     }
 
+    // mutator
     public void setOffsetY(int offsetY) {
         this.offsetY = offsetY;
     }
     
+    // accessor
     public boolean[][] getShape() {
         return shape;
     }
     
+    // accessor
     public int getShapeRowLength() {
         return this.shape.length;
     }
     
+    // accessor
     public int getShapeColumnLength() {
         return this.shape[0].length;
     }
