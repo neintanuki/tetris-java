@@ -38,6 +38,15 @@ public class TetrisBlock {
         }
         this.shape = this.shapes[currentRotation];
     }
+    
+    public void undoRotate() {
+        currentRotation--;
+        if (currentRotation < 0) {
+            currentRotation = 3;
+        }
+        System.err.println(currentRotation);
+        this.shape = this.shapes[currentRotation];
+    }
 
     // accessor
     public Color getColor() {

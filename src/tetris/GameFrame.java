@@ -70,7 +70,7 @@ public class GameFrame extends javax.swing.JFrame {
 
     // mutator
     public void setLevel(int level) {
-        this.level = level;
+        this.level = Math.max(1, level);
         this.levelLabel.setText("Level: " + Integer.toString(this.level));
     }
     

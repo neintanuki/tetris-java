@@ -20,4 +20,32 @@ public class LongLBlock extends TetrisBlock {
         this.setColor(Color.CYAN);
         this.initVariations();
     }
+    
+    // method overloading
+    @Override
+    public void rotate() {
+        super.rotate();
+        
+        if (this.getShapeColumnLength() == 1) {
+            this.setOffsetX(this.getOffsetX() + 1);
+            this.setOffsetY(this.getOffsetY() - 1);
+        } else {
+            this.setOffsetX(this.getOffsetX() - 1);
+            this.setOffsetY(this.getOffsetY() + 1);            
+        }
+    }
+    
+    // method overloading
+    @Override
+    public void undoRotate() {
+        super.rotate();
+        
+        if (this.getShapeColumnLength() == 1) {
+            this.setOffsetX(this.getOffsetX() - 1);
+            this.setOffsetY(this.getOffsetY() + 1);
+        } else {
+            this.setOffsetX(this.getOffsetX() + 1);
+            this.setOffsetY(this.getOffsetY() - 1);            
+        }        
+    }
 }

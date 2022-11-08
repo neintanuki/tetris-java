@@ -6,6 +6,7 @@ import tetris.TetrisBlock;
 public class BlockList {
     // static declaration
     private static ArrayList<TetrisBlock> blocks = new ArrayList<TetrisBlock>();
+    private static TetrisBlock prevBlock;
     
     public BlockList(int columns) {
         // constructor chaining
@@ -26,7 +27,21 @@ public class BlockList {
     
     // accessor
     public TetrisBlock getRandBlock() {
-        return blocks.get((int) (Math.random() * blocks.size()));
+        TetrisBlock newBlock = blocks.get((int) (Math.random() * blocks.size()));
+
+        if (prevBlock != null) {
+            while (true) {
+                if (newBlock.getClass().equals(prevBlock.getClass())) {
+                    newBlock = blocks.get((int) (Math.random() * blocks.size()));
+                } else {
+                    break;
+                }
+            }
+        }
+        
+        prevBlock = newBlock;
+        
+        return newBlock;
     }
     
 }

@@ -80,12 +80,30 @@ public class GameArea extends javax.swing.JPanel {
     
     public void rotateBlock() {
         if (this.block == null) return;
-
+        
         this.block.rotate();
+        
+        // sides collision
         if (this.block.getOffsetX() < 0) block.setOffsetX(0);
         if (this.block.getOffsetX() + block.getShapeColumnLength() >= this.columns) block.setOffsetX(this.columns - block.getShapeColumnLength());
-        if (this.block.getOffsetY() + block.getShapeRowLength() >= this.rows) block.setOffsetY(this.rows - block.getShapeRowLength());
-
+        if (this.block.getOffsetY() + block.getShapeRowLength() >= this.rows) block.setOffsetY(this.rows - block.getShapeRowLength()); 
+        
+        // check if rotation is possible
+        for (int row = 0; row < this.block.getShapeRowLength(); row++) {
+            for (int col = 0; col < this.block.getShapeColumnLength(); col++) {
+                if(this.block.getShape()[row][col]) {
+                    int x = col + this.block.getOffsetX();
+                    int y = row + this.block.getOffsetY();
+                    
+                    if (y < 0) break;
+                    if (background[y][x] != null) {
+                        block.undoRotate();
+                        return;
+                    }
+                }
+            }
+        }
+        
         repaint();
     }
     
